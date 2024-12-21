@@ -1,5 +1,5 @@
-import React from 'react'
-import Link from 'next/link'
+import React from "react";
+import Link from "next/link";
 
 const Landing = () => {
   return (
@@ -9,7 +9,7 @@ const Landing = () => {
         <Link href='/login' className='absolute font-sans text-lg text-black rounded-[20px] px-8 py-2 bg-white border-gray-600 border-2 top-3 right-3'>Login</Link>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Landing
+export default Landing;
