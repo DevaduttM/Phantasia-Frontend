@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Menu, FolderPlus, MessageSquarePlus } from "lucide-react";
+import { Menu, FolderPlus, MessageSquarePlus, PanelLeftOpen, PanelLeftClose } from "lucide-react";
 import {
   Label,
   Listbox,
@@ -36,7 +36,13 @@ export default function Home() {
       {/* Header */}
       <header className="flex items-center justify-between px-10 py-5">
         <div className="flex items-center gap-5">
-          <Menu onClick={() => setSidemenu(!sidemenu)} className="z-10 w-7 h-7 text-gray-600 hover:text-gray-800 transition-all duration-500 ease-in-out cursor-pointer" />
+          {
+            sidemenu ? (
+              <PanelLeftClose onClick={() => setSidemenu(!sidemenu)} className="z-10 w-7 h-7 text-gray-600 hover:text-gray-800 transition-all duration-500 ease-in-out cursor-pointer" /> ) : (
+                <PanelLeftOpen onClick={() => setSidemenu(!sidemenu)} className="z-10 w-7 h-7 text-gray-600 hover:text-gray-800 transition-all duration-500 ease-in-out cursor-pointer" />
+              )
+
+          }
           <MessageSquarePlus className="z-10 w-7 h-7 text-gray-600 cursor-pointer hover:text-gray-800 transition-all duration-500 ease-in-out " />
           <h1 className={` text-3xl text-[#4A4A4A] font-Gentona z-10`}>Phantasia</h1>
         </div>
