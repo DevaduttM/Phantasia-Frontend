@@ -18,6 +18,11 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  background: radial-gradient(circle at center, #ffffff 0%, #ebebeb 100%);
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 @font-face {
@@ -32,4 +37,26 @@ body {
   src: url("/fonts/Barlow-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
+}
+
+@keyframes shrinkExpand {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.5);
+  }
+}
+
+.animate-circle {
+  animation: shrinkExpand 1.5s infinite;
+}
+
+.animation-delay-1 {
+  animation-delay: 0.3s;
+}
+
+.animation-delay-2 {
+  animation-delay: 0.8s;
 }
