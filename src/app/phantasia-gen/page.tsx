@@ -1,6 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { db } from "../firebase"; // Assume you have already set up Firebase
+import { collection, getDocs, addDoc } from "firebase/firestore";
 import {
   Menu,
   FolderPlus,
@@ -20,7 +22,6 @@ import { ChevronUpDownIcon } from "@heroicons/react/16/solid";
 import { CheckIcon } from "@heroicons/react/20/solid";
 export default function Home() {
   const { user, googleSignIn, logOut } = UserAuth();
-  console.log(user);
   const handleSignIn = async () => {
     try {
       await googleSignIn();
@@ -50,11 +51,64 @@ export default function Home() {
   ];
 
   const [story, setStory] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [selected1, setSelected1] = useState(people[0]);
   const [selected2, setSelected2] = useState(people[0]);
   const [sidemenu, setSidemenu] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [isTall, setIsTall] = useState(false);
+  const [savedItems, setSavedItems] = useState<any>([]);
+  const handleChange = (e: any) => {
+    const textarea = e.target;
+    setStory(e.target.value);
+
+    // Automatically adjust height
+    textarea.style.height = "auto"; // Reset height
+    textarea.style.height = `${textarea.scrollHeight}px`; // Adjust height
+
+    // Check if scrollHeight exceeds 56px and update state
+    textarea.scrollHeight > `${56}px` ? setIsTall(true) : setIsTall(false);
+  };
+  const handleGenerate = async () => {
+    setLoading(true);
+    if (story.trim()) {
+      const docRef = await addDoc(collection(db, "Script"), {
+        Question: story,
+        Username: user.displayName,
+      });
+    }
+  };
+  console.log(savedItems);
+  useEffect(() => {
+    async function fetchSessions() {
+      const querySnapshot = await getDocs(collection(db, "Script"));
+      const sessionsData = querySnapshot.docs.map((doc) => doc.data());
+      setSavedItems(sessionsData);
+    }
+
+    fetchSessions();
+  }, []);
+
+  const saveItem = async () => {
+    if (story.trim()) {
+      try {
+        await addDoc(collection(db, "Script"), {
+          Question: story,
+          Username: user.displayName,
+        });
+        setStory("");
+        setIsTall(false);
+        const querySnapshot = await getDocs(collection(db, "Script"));
+        const sessionsData = querySnapshot.docs.map((doc) => doc.data());
+        setSavedItems(sessionsData);
+      } catch (error) {
+        console.error("Error saving document: ", error);
+      } finally {
+        setStory("");
+      }
+    }
+  };
+
   return (
     <>
       <div className="min-h-screen  flex flex-col relative">
@@ -72,7 +126,10 @@ export default function Home() {
                 className="z-10 w-7 h-7 text-gray-600 hover:text-gray-800 transition-all duration-500 ease-in-out cursor-pointer"
               />
             )}
-            <MessageSquarePlus className="z-10 w-7 h-7 text-gray-600 cursor-pointer hover:text-gray-800 transition-all duration-500 ease-in-out " />
+            <MessageSquarePlus
+              onClick={saveItem}
+              className="z-10 w-7 h-7 text-gray-600 cursor-pointer hover:text-gray-800 transition-all duration-500 ease-in-out "
+            />
             <h1 className={` text-3xl text-[#4A4A4A] font-Gentona z-10`}>
               Phantasia
             </h1>
@@ -232,16 +289,21 @@ export default function Home() {
             </div>
           </div>
           {/* Input Field */}
-          <div className="w-full px-4 py-10 ">
+          <div className="w-full px-4 py-10">
             <div className="max-w-2xl mx-auto relative">
-              <input
-                type="text"
-                placeholder="Type your story here.."
+              <textarea
+                placeholder="Type your story here..."
                 value={story}
-                onChange={(e) => setStory(e.target.value)}
-                className="w-full caret-black text-black px-6 py-4 shadow-md font-Barlow  rounded-full border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-200 pr-32 bg-white"
+                onChange={handleChange}
+                className={`w-full caret-black text-black px-6 py-4 shadow-md font-Barlow rounded-xl border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-200 pr-32 bg-white resize-none overflow-hidden ${
+                  isTall ? `rounded-xl` : `rounded-full`
+                }`}
+                rows={1}
               />
-              <button className="absolute font-Barlow  right-2 top-1/2 -translate-y-1/2 px-6 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition-colors">
+              <button
+                onClick={handleGenerate}
+                className="absolute font-Barlow right-2 top-1/2 -translate-y-1/2 px-6 py-2 mt-[-2px] bg-black text-white rounded-full hover:bg-gray-800 transition-colors"
+              >
                 Generate
               </button>
             </div>
@@ -252,7 +314,20 @@ export default function Home() {
         className={`transition-all duration-500 ease-in-out absolute top-0 left-0 h-full bg-[#afafaf] shadow-lg ${
           sidemenu ? "w-1/5" : "w-0"
         }`}
-      ></div>
+      >
+        <ul className="mt-20">
+          {savedItems.map((session: any, index: any) => (
+            <li
+              key={index}
+              className="session-item text-nowrap shadow-md bg-[#999898] rounded-lg m-3 py-3 hover:opacity-80 transition-all duration-500 ease-in-out cursor-pointer"
+            >
+              <h1 className="font-Barlow text-lg ml-2">
+                {session.Question.slice(0, 32) + "..."}
+              </h1>
+            </li>
+          ))}
+        </ul>
+      </div>
     </>
   );
 }
