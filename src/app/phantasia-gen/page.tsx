@@ -1,11 +1,35 @@
 "use client";
 import React, { useState } from "react";
 import { Menu, FolderPlus } from "lucide-react";
+import {
+  Label,
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+} from "@headlessui/react";
+import { ChevronUpDownIcon } from "@heroicons/react/16/solid";
+import { CheckIcon } from "@heroicons/react/20/solid";
 export default function Home() {
+  const people = [
+    {
+      id: 1,
+      name: "Walter White",
+      avatar: "https://i.imgur.com/S5qNPdj.png",
+    },
+    {
+      id: 2,
+      name: "Arlene Mccoy",
+      avatar:
+        "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    },
+  ];
+
   const [story, setStory] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState(people[0]);
   return (
-    <div className="min-h-screen  flex flex-col">
+    <div className="min-h-screen  flex flex-col relative">
       {/* Header */}
       <header className="flex items-center justify-between px-10 py-5">
         <div className="flex items-center gap-5">
@@ -25,9 +49,9 @@ export default function Home() {
           <div className="flex items-center gap-8">
             {loading ? (
               <>
-                <div className="w-[140px] h-[140px] rounded-full border border-black bg-white shadow-lg animate-circle"></div>
-                <div className="w-[100px] h-[100px] rounded-full border border-black bg-white shadow-lg animate-circle animation-delay-1"></div>
-                <div className="w-[40px] h-[40px] rounded-full border border-black bg-white shadow-lg animate-circle animation-delay-2"></div>
+                <div className="w-[140px] h-[140px] rounded-full border border-gray-600 bg-white shadow-lg animate-circle"></div>
+                <div className="w-[100px] h-[100px] rounded-full border border-gray-600 bg-white shadow-lg animate-circle animation-delay-1"></div>
+                <div className="w-[40px] h-[40px] rounded-full border border-gray-600 bg-white shadow-lg animate-circle animation-delay-2"></div>
               </>
             ) : (
               <>
@@ -36,6 +60,111 @@ export default function Home() {
                 <div className="w-[40px] h-[40px] rounded-full border border-black bg-white shadow-lg "></div>
               </>
             )}
+            <div className="absolute top-[20%] left-[86%] ">
+              <Listbox value={selected} onChange={setSelected}>
+                <Label className="block text-sm/6 font-medium font-Barlow text-gray-900">
+                  CHARACTER 1
+                </Label>
+                <div className="relative mt-2">
+                  <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-xl bg-white py-2 pr-8 pl-2 text-left text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-gray-600 sm:text-sm/6">
+                    <span className="col-start-1 row-start-1 flex items-center gap-3 pr-6">
+                      <img
+                        alt=""
+                        src={selected.avatar}
+                        className="size-5 shrink-0 rounded-full"
+                      />
+                      <span className="block truncate">{selected.name}</span>
+                    </span>
+                    <ChevronUpDownIcon
+                      aria-hidden="true"
+                      className="col-start-1 row-start-1 size-5 self-center mr-[-20px]  justify-self-end text-gray-500 sm:size-4"
+                    />
+                  </ListboxButton>
+
+                  <ListboxOptions
+                    transition
+                    className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none data-[closed]:data-[leave]:opacity-0 data-[leave]:transition data-[leave]:duration-100 data-[leave]:ease-in sm:text-sm"
+                  >
+                    {people.map((person: any) => (
+                      <ListboxOption
+                        key={person.id}
+                        value={person}
+                        className="group relative cursor-default select-none py-2 pl-3 pr-9 text-gray-900 data-[focus]:bg-gray-600 data-[focus]:text-white data-[focus]:outline-none"
+                      >
+                        <div className="flex items-center">
+                          <img
+                            alt=""
+                            src={person.avatar}
+                            className="size-5 shrink-0 rounded-full"
+                          />
+                          <span className="ml-3 block truncate font-normal group-data-[selected]:font-semibold">
+                            {person.name}
+                          </span>
+                        </div>
+
+                        <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-[&:not([data-selected])]:hidden group-data-[focus]:text-white">
+                          <CheckIcon aria-hidden="true" className="size-5" />
+                        </span>
+                      </ListboxOption>
+                    ))}
+                  </ListboxOptions>
+                  <Listbox value={selected} onChange={setSelected}>
+                    <Label className="block text-sm/6 font-medium font-Barlow text-gray-900 mt-2">
+                      CHARACTER 2
+                    </Label>
+                    <div className="relative mt-2">
+                      <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-xl bg-white py-2 pr-8 pl-2 text-left text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-gray-600 sm:text-sm/6">
+                        <span className="col-start-1 row-start-1 flex items-center gap-3 pr-6">
+                          <img
+                            alt=""
+                            src={selected.avatar}
+                            className="size-5 shrink-0 rounded-full"
+                          />
+                          <span className="block truncate">
+                            {selected.name}
+                          </span>
+                        </span>
+                        <ChevronUpDownIcon
+                          aria-hidden="true"
+                          className="col-start-1 row-start-1 size-5 self-center mr-[-20px]  justify-self-end text-gray-500 sm:size-4"
+                        />
+                      </ListboxButton>
+
+                      <ListboxOptions
+                        transition
+                        className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none data-[closed]:data-[leave]:opacity-0 data-[leave]:transition data-[leave]:duration-100 data-[leave]:ease-in sm:text-sm"
+                      >
+                        {people.map((person: any) => (
+                          <ListboxOption
+                            key={person.id}
+                            value={person}
+                            className="group relative cursor-default select-none py-2 pl-3 pr-9 text-gray-900 data-[focus]:bg-gray-600 data-[focus]:text-white data-[focus]:outline-none"
+                          >
+                            <div className="flex items-center">
+                              <img
+                                alt=""
+                                src={person.avatar}
+                                className="size-5 shrink-0 rounded-full"
+                              />
+                              <span className="ml-3 block truncate font-normal group-data-[selected]:font-semibold">
+                                {person.name}
+                              </span>
+                            </div>
+
+                            <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-[&:not([data-selected])]:hidden group-data-[focus]:text-white">
+                              <CheckIcon
+                                aria-hidden="true"
+                                className="size-5"
+                              />
+                            </span>
+                          </ListboxOption>
+                        ))}
+                      </ListboxOptions>
+                    </div>
+                  </Listbox>
+                </div>
+              </Listbox>
+            </div>
           </div>
         </div>
         {/* Input Field */}
