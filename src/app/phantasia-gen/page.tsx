@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { db } from "../firebase"; // Assume you have already set up Firebase
 import { collection, getDocs, addDoc, query, where } from "firebase/firestore";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Menu,
   FolderPlus,
@@ -177,14 +178,20 @@ export default function Home() {
                 className="rounded-full mr-2  border-gray-500 border-2"
                 onClick={() => setShowProfile(!showProfile)}
               ></Image>
+              <AnimatePresence>
               {showProfile && (
-                <button
+                <motion.button
+                  initial={{y:-10, opacity: 0 }}
+                  animate={{y:0, opacity: 1 }}
+                  exit={{y:-10, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
                   onClick={handleSignOut}
                   className="absolute right-[2%] px-5 mx-4 my-2 py-2 rounded-full bg-white shadow-md border font-Barlow border-gray-600 hover:bg-gray-100 transition-colors text-black"
                 >
                   Logout
-                </button>
+                </motion.button>
               )}
+              </AnimatePresence>
             </div>
           )}
         </header>

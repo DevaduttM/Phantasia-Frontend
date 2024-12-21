@@ -9,19 +9,7 @@ const About = () => {
             About Phantasia
           </h1>
           <p className="text-lg text-black font-Barlow text-left">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloremque
-            iure omnis fugit, quisquam reprehenderit suscipit mollitia
-            dignissimos voluptate cupiditate illum excepturi recusandae cum
-            voluptates exercitationem neque necessitatibus ipsa eius nemo iste
-            enim, ex voluptatum blanditiis! Fugit officiis odio, voluptate aut
-            exercitationem est nemo illo corporis quas accusantium, id iure nisi
-            aspernatur voluptates consectetur eaque provident. Maiores
-            voluptatibus ullam pariatur dolorum, mollitia animi sunt cupiditate
-            distinctio earum praesentium? Distinctio odit veniam quam et at amet
-            libero ducimus quaerat sint eius, tempore in voluptatibus, optio
-            neque placeat facilis dignissimos, consequuntur aperiam aliquid.
-            Magni dolore explicabo laudantium iusto! Reiciendis reprehenderit
-            quae aliquid voluptate.
+          Phantasia is a groundbreaking platform that brings your wildest fan fiction dreams to life! Imagine crafting alternate endings, creating new scenes, or even adding exciting episodes to your favorite stories. Phantasia takes it a step further by allowing you to merge characters from completely different movies or TV shows, resulting in mind-blowing cross-universe interactions and entirely unique storylines. What sets Phantasia apart is its cutting-edge voice model that perfectly mimics the voices of your favorite characters, bringing scenes to life with the right emotions, just like a real movie. Whether you're expanding existing stories or creating fresh, exciting narratives, Phantasia gives you the power to unlock endless possibilities. Dive into a world where your imagination knows no bounds, and let Phantasia turn your fan fiction fantasies into an immersive, cinematic experience!
           </p>
         </div>
         <div className="w-full h-[40%] flex flex-row gap-5 mt-5">
