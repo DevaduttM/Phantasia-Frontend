@@ -20,6 +20,7 @@ import {
 } from "@headlessui/react";
 import { ChevronUpDownIcon } from "@heroicons/react/16/solid";
 import { CheckIcon } from "@heroicons/react/20/solid";
+import Player from "@/components/Player";
 export default function Home() {
   const { user, googleSignIn, logOut } = UserAuth();
   const handleSignIn = async () => {
@@ -67,7 +68,8 @@ export default function Home() {
     textarea.style.height = `${textarea.scrollHeight}px`; // Adjust height
 
     // Check if scrollHeight exceeds 56px and update state
-    textarea.scrollHeight > `${56}px` ? setIsTall(true) : setIsTall(false);
+    textarea.scrollHeight > 56 ? setIsTall(true) : setIsTall(false);
+    console.log(textarea.scrollHeight);
   };
   const handleGenerate = async () => {
     setLoading(true);
@@ -192,7 +194,7 @@ export default function Home() {
           {/* Loading Circles */}
           <div className="flex-1 flex items-center justify-center">
             <div className="flex items-center gap-8">
-              {loading ? (
+              {/* {loading ? (
                 <>
                   <div className="w-[140px] h-[140px] rounded-full border border-gray-600 bg-white shadow-lg animate-circle"></div>
                   <div className="w-[100px] h-[100px] rounded-full border border-gray-600 bg-white shadow-lg animate-circle animation-delay-1"></div>
@@ -204,7 +206,8 @@ export default function Home() {
                   <div className="w-[100px] h-[100px] rounded-full border border-black bg-white shadow-lg "></div>
                   <div className="w-[40px] h-[40px] rounded-full border border-black bg-white shadow-lg "></div>
                 </>
-              )}
+              )} */}
+              <Player />
               <div className="absolute top-[20%] left-[86%] ">
                 <Listbox value={selected1} onChange={setSelected1}>
                   <Label className="block text-sm/6 font-medium font-Barlow text-gray-900">
@@ -319,8 +322,8 @@ export default function Home() {
                 placeholder="Type your story here..."
                 value={story}
                 onChange={handleChange}
-                className={`w-full caret-black text-black px-6 py-4 shadow-md font-Barlow rounded-xl border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-200 pr-32 bg-white resize-none overflow-hidden ${
-                  isTall ? `rounded-xl` : `rounded-full`
+                className={`w-full caret-black text-black px-6 py-4 shadow-md font-Barlow border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-200 pr-32 bg-white resize-none overflow-hidden ${
+                  isTall ? `rounded-3xl` : `rounded-full`
                 }`}
                 rows={1}
               />
