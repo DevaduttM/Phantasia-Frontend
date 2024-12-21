@@ -9,6 +9,8 @@ import PauseRounded from "@mui/icons-material/PauseRounded";
 import PlayArrowRounded from "@mui/icons-material/PlayArrowRounded";
 import FastForwardRounded from "@mui/icons-material/FastForwardRounded";
 import FastRewindRounded from "@mui/icons-material/FastRewindRounded";
+import Image from "next/image";
+import { motion } from "framer-motion";
 
 const Widget = styled("div")(({ theme }) => ({
   padding: 16,
@@ -48,7 +50,7 @@ export default function MusicPlayerSlider() {
   const duration = audioRef.current?.duration || 0;
   const [position, setPosition] = React.useState(0);
   const [paused, setPaused] = React.useState(true);
-  const title = audioRef.current?.getAttribute("name") || "Unknown title";
+  const [wave, setWave] = React.useState(false);
 
 
   function formatDuration(value: number) {
@@ -89,8 +91,10 @@ export default function MusicPlayerSlider() {
 
     if (paused) {
       audio.play();
+      setWave(true);
     } else {
       audio.pause();
+      setWave(false);
     }
     setPaused(!paused);
   };
@@ -110,12 +114,14 @@ export default function MusicPlayerSlider() {
         ref={audioRef}
         src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
       />
-      <Widget>
-        <Box sx={{ display: "flex", alignItems: "center", backgroundColor: "rgba(0,0,0,0.08)", borderRadius: 8, p: 1.5 }}>
+      <Widget sx={window.innerWidth < 600 ? { width: "100%" } : { width: 500 }}>
+        
+        <Box  sx={{ display: "flex", alignItems: "center", backgroundColor: "rgba(0,0,0,0.08)", borderRadius: 8, p: 1.5 }}>
           <CoverImage>
             <img
               alt="can't win - Chilling Sunday"
               src="https://i.imgur.com/S5qNPdj.png"
+              className="w-auto h-full"
             />
           </CoverImage>
           <Box sx={{ ml: 1.5, minWidth: 0 }}>
@@ -128,6 +134,26 @@ export default function MusicPlayerSlider() {
             <Typography noWrap sx={{ letterSpacing: -0.25, color: "#000" }}>
               Breaking Bad
             </Typography>
+          </Box>
+          <Box>
+          {
+          wave && (
+            <motion.div className=""
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            >
+
+              <Image
+                src={"/Waveform.gif"}
+                width={120}
+                className="ml-[60%] "
+                height={120}
+                alt="waveform"
+              />
+            </motion.div>
+          )
+        }
           </Box>
         </Box>
         <Slider
