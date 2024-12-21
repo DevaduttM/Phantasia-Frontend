@@ -50,7 +50,6 @@ export default function MusicPlayerSlider() {
   const [paused, setPaused] = React.useState(true);
   const title = audioRef.current?.getAttribute("name") || "Unknown title";
 
-  console.log(title)
 
   function formatDuration(value: number) {
     const roundedValue = Math.floor(value);

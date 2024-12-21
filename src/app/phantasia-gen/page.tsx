@@ -1,6 +1,14 @@
 "use client";
 import React, { useState } from "react";
-import { Menu, FolderPlus, MessageSquarePlus, PanelLeftOpen, PanelLeftClose } from "lucide-react";
+import Image from "next/image";
+import {
+  Menu,
+  FolderPlus,
+  MessageSquarePlus,
+  PanelLeftOpen,
+  PanelLeftClose,
+} from "lucide-react";
+import { UserAuth } from "../context/AuthContext";
 import {
   Label,
   Listbox,
@@ -11,6 +19,23 @@ import {
 import { ChevronUpDownIcon } from "@heroicons/react/16/solid";
 import { CheckIcon } from "@heroicons/react/20/solid";
 export default function Home() {
+  const { user, googleSignIn, logOut } = UserAuth();
+  console.log(user);
+  const handleSignIn = async () => {
+    try {
+      await googleSignIn();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await logOut();
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const people = [
     {
       id: 1,
@@ -29,26 +54,57 @@ export default function Home() {
   const [selected1, setSelected1] = useState(people[0]);
   const [selected2, setSelected2] = useState(people[0]);
   const [sidemenu, setSidemenu] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   return (
     <>
-    <div className="min-h-screen  flex flex-col relative">
-      {/* Header */}
-      <header className="flex items-center justify-between px-10 py-5">
-        <div className="flex items-center gap-5">
-          {
-            sidemenu ? (
-              <PanelLeftClose onClick={() => setSidemenu(!sidemenu)} className="z-10 w-7 h-7 text-gray-600 hover:text-gray-800 transition-all duration-500 ease-in-out cursor-pointer" /> ) : (
-                <PanelLeftOpen onClick={() => setSidemenu(!sidemenu)} className="z-10 w-7 h-7 text-gray-600 hover:text-gray-800 transition-all duration-500 ease-in-out cursor-pointer" />
-              )
-
-          }
-          <MessageSquarePlus className="z-10 w-7 h-7 text-gray-600 cursor-pointer hover:text-gray-800 transition-all duration-500 ease-in-out " />
-          <h1 className={` text-3xl text-[#4A4A4A] font-Gentona z-10`}>Phantasia</h1>
-        </div>
-        <button className="px-5 mx-4 my-2 py-2 rounded-full bg-white shadow-md border font-Barlow border-gray-600 hover:bg-gray-100 transition-colors text-black">
-          Login
-        </button>
-      </header>
+      <div className="min-h-screen  flex flex-col relative">
+        {/* Header */}
+        <header className="flex items-center justify-between px-10 py-5">
+          <div className="flex items-center gap-5">
+            {sidemenu ? (
+              <PanelLeftClose
+                onClick={() => setSidemenu(!sidemenu)}
+                className="z-10 w-7 h-7 text-gray-600 hover:text-gray-800 transition-all duration-500 ease-in-out cursor-pointer"
+              />
+            ) : (
+              <PanelLeftOpen
+                onClick={() => setSidemenu(!sidemenu)}
+                className="z-10 w-7 h-7 text-gray-600 hover:text-gray-800 transition-all duration-500 ease-in-out cursor-pointer"
+              />
+            )}
+            <MessageSquarePlus className="z-10 w-7 h-7 text-gray-600 cursor-pointer hover:text-gray-800 transition-all duration-500 ease-in-out " />
+            <h1 className={` text-3xl text-[#4A4A4A] font-Gentona z-10`}>
+              Phantasia
+            </h1>
+          </div>
+          {!user ? (
+            <button
+              onClick={handleSignIn}
+              className="px-5 mx-4 my-2 py-2 rounded-full bg-white shadow-md border font-Barlow border-gray-600 hover:bg-gray-100 transition-colors text-black"
+            >
+              Login
+            </button>
+          ) : (
+            <div>
+              <Image
+                src={user.photoURL}
+                alt="profile"
+                width={40}
+                height={40}
+                className="rounded-full mr-2  border-gray-500 border-2"
+                onClick={() => setShowProfile(!showProfile)}
+              ></Image>
+              {showProfile && (
+                <button
+                  onClick={handleSignOut}
+                  className="absolute right-[2%] px-5 mx-4 my-2 py-2 rounded-full bg-white shadow-md border font-Barlow border-gray-600 hover:bg-gray-100 transition-colors text-black"
+                >
+                  Logout
+                </button>
+              )}
+            </div>
+          )}
+        </header>
 
         {/* Main Content */}
         <main className="flex-1 flex flex-col">
@@ -183,7 +239,7 @@ export default function Home() {
                 placeholder="Type your story here.."
                 value={story}
                 onChange={(e) => setStory(e.target.value)}
-                className="w-full caret-black px-6 py-4 shadow-md font-Barlow  rounded-full border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-200 pr-32 bg-white"
+                className="w-full caret-black text-black px-6 py-4 shadow-md font-Barlow  rounded-full border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-200 pr-32 bg-white"
               />
               <button className="absolute font-Barlow  right-2 top-1/2 -translate-y-1/2 px-6 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition-colors">
                 Generate
