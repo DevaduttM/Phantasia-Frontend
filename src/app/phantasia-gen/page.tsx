@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Menu, FolderPlus } from "lucide-react";
+import { Menu, FolderPlus, MessageSquarePlus } from "lucide-react";
 import {
   Label,
   Listbox,
@@ -27,15 +27,18 @@ export default function Home() {
 
   const [story, setStory] = useState("");
   const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState(people[0]);
+  const [selected1, setSelected1] = useState(people[0]);
+  const [selected2, setSelected2] = useState(people[0]);
+  const [sidemenu, setSidemenu] = useState(false);
   return (
+    <>
     <div className="min-h-screen  flex flex-col relative">
       {/* Header */}
       <header className="flex items-center justify-between px-10 py-5">
         <div className="flex items-center gap-5">
-          <Menu className="w-7 h-7 text-gray-600" />
-          <FolderPlus className="w-7 h-7 text-gray-600" />
-          <h1 className=" text-3xl  text-[#4A4A4A] font-Gentona">Phantasia</h1>
+          <Menu onClick={() => setSidemenu(!sidemenu)} className="z-10 w-7 h-7 text-gray-600 hover:text-gray-800 transition-all duration-500 ease-in-out cursor-pointer" />
+          <MessageSquarePlus className="z-10 w-7 h-7 text-gray-600 cursor-pointer hover:text-gray-800 transition-all duration-500 ease-in-out " />
+          <h1 className={` text-3xl text-[#4A4A4A] font-Gentona z-10`}>Phantasia</h1>
         </div>
         <button className="px-5 mx-4 my-2 py-2 rounded-full bg-white shadow-md border font-Barlow border-gray-600 hover:bg-gray-100 transition-colors text-black">
           Login
@@ -61,7 +64,7 @@ export default function Home() {
               </>
             )}
             <div className="absolute top-[20%] left-[86%] ">
-              <Listbox value={selected} onChange={setSelected}>
+              <Listbox value={selected1} onChange={setSelected1}>
                 <Label className="block text-sm/6 font-medium font-Barlow text-gray-900">
                   CHARACTER 1
                 </Label>
@@ -70,10 +73,10 @@ export default function Home() {
                     <span className="col-start-1 row-start-1 flex items-center gap-3 pr-6">
                       <img
                         alt=""
-                        src={selected.avatar}
+                        src={selected1.avatar}
                         className="size-5 shrink-0 rounded-full"
                       />
-                      <span className="block truncate">{selected.name}</span>
+                      <span className="block truncate">{selected1.name}</span>
                     </span>
                     <ChevronUpDownIcon
                       aria-hidden="true"
@@ -108,7 +111,7 @@ export default function Home() {
                       </ListboxOption>
                     ))}
                   </ListboxOptions>
-                  <Listbox value={selected} onChange={setSelected}>
+                  <Listbox value={selected2} onChange={setSelected2}>
                     <Label className="block text-sm/6 font-medium font-Barlow text-gray-900 mt-2">
                       CHARACTER 2
                     </Label>
@@ -117,11 +120,11 @@ export default function Home() {
                         <span className="col-start-1 row-start-1 flex items-center gap-3 pr-6">
                           <img
                             alt=""
-                            src={selected.avatar}
+                            src={selected2.avatar}
                             className="size-5 shrink-0 rounded-full"
                           />
                           <span className="block truncate">
-                            {selected.name}
+                            {selected2.name}
                           </span>
                         </span>
                         <ChevronUpDownIcon
@@ -184,5 +187,9 @@ export default function Home() {
         </div>
       </main>
     </div>
+    <div className={`transition-all duration-500 ease-in-out absolute top-0 left-0 h-full bg-[#afafaf] shadow-lg ${sidemenu ? 'w-1/6' : 'w-0'}`}>
+    
+    </div>
+    </>
   );
 }
