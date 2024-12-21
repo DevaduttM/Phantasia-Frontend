@@ -3,7 +3,7 @@ import React from "react";
 const About = () => {
   return (
     <div className="w-screen h-screen text-black flex items-center justify-center shadow-lg">
-      <div className="about-container w-3/4 h-[80%] border-gray-600  rounded-2xl px-20 ">
+      <div className="about-container w-3/4 h-[80%] bg-[#ebebeb] border-gray-600 z-10 rounded-2xl px-20 ">
         <div className="about-content flex flex-col items-center justify-start gap-10">
           <h1 className="font-Gentona text-[#4a4a4a] text-6xl mt-10">
             About Phantasia
