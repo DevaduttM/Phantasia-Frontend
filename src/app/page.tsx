@@ -1,8 +1,11 @@
- import React from 'react'
+ import Landing from '@/components/Landing'
+import React from 'react'
  
  export default function Home() {
    return (
-     <div></div>
+     <div>
+        <Landing />
+     </div>
    )
  }
  
