@@ -71,13 +71,6 @@ export default function Home() {
   };
   const handleGenerate = async () => {
     setLoading(true);
-    if (story.trim() && user) {
-      const docRef = await addDoc(collection(db, "Script"), {
-        Question: story,
-        Username: user.displayName,
-        userId: user.uid, // Add user ID to the document
-      });
-    }
   };
   console.log(savedItems);
   useEffect(() => {
