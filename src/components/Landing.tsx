@@ -1,12 +1,30 @@
 import React from "react";
 import Link from "next/link";
+import { ArrowUpRight, ChevronsDown } from "lucide-react";
 
 const Landing = () => {
   return (
     <>
-      <div className="h-screen w-screen bg-white flex items-center">
-        <h1 className='font-Gentona text-[#3a3a3a] text-[12rem] ml-10'>Phantasia</h1>
-        <Link href='/login' className='absolute font-sans text-lg text-white rounded-[20px] px-8 py-3 bg-black top-3 right-3'>Login</Link>
+      <div className="h-screen w-screen bg-[#ebebeb] flex items-center justify-center">
+        <div className="flex flex-col justify-center items-center gap-5">
+          <h1 className="font-Gentona text-[#4a4a4a] text-7xl ml-10">
+            Introducing Phantasia
+          </h1>
+          <Link
+            href="/phantasia-gen"
+            className=" font-sans text-lg text-black rounded-full px-8 py-2 bg-white border-gray-600 border top-3 right-3 flex flex-row items-center justify-center gap-2"
+          >
+            Try Phantasia
+            <ArrowUpRight className="text-[#4a4a4a]" />
+          </Link>
+        </div>
+        <Link
+          href="/login"
+          className="fixed font-sans text-lg text-black rounded-full px-8 py-2 bg-white border-gray-600 border top-3 right-3"
+        >
+          Login
+        </Link>
+        {/* <ChevronsDown className="absolute bottom-5 w-[5rem] text-black" /> */}
       </div>
     </>
   );

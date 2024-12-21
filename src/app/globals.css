@@ -60,3 +60,17 @@ body {
 .animation-delay-2 {
   animation-delay: 0.8s;
 }
+
+.about-container {
+  box-shadow: 0px 0px 30px #4e4e4ec9;
+}
+
+::-webkit-scrollbar{
+  width: 10px;
+  background: #292626;
+}
+
+::-webkit-scrollbar-thumb{
+  background: #727272;
+  border-radius: 10px;
+}
