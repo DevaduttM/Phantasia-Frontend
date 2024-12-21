@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Menu, FolderPlus, MessageSquarePlus } from "lucide-react";
+import { Menu, FolderPlus, MessageSquarePlus, PanelLeftOpen, PanelLeftClose } from "lucide-react";
 import {
   Label,
   Listbox,
@@ -31,23 +31,24 @@ export default function Home() {
   const [sidemenu, setSidemenu] = useState(false);
   return (
     <>
-      <div className="min-h-screen  flex flex-col relative">
-        {/* Header */}
-        <header className="flex items-center justify-between px-8 py-5">
-          <div className="flex items-center gap-5">
-            <Menu
-              onClick={() => setSidemenu(!sidemenu)}
-              className="z-10 w-7 h-7 text-gray-600 hover:text-gray-800 transition-all duration-500 ease-in-out cursor-pointer"
-            />
-            <MessageSquarePlus className="z-10 w-7 h-7 text-gray-600 cursor-pointer hover:text-gray-800 transition-all duration-500 ease-in-out " />
-            <h1 className={` text-3xl text-[#4A4A4A] font-Gentona z-10`}>
-              Phantasia
-            </h1>
-          </div>
-          <button className="px-5 mx-4 my-2 py-2 rounded-full bg-white shadow-md border font-Barlow border-gray-600 hover:bg-gray-100 transition-colors text-black">
-            Login
-          </button>
-        </header>
+    <div className="min-h-screen  flex flex-col relative">
+      {/* Header */}
+      <header className="flex items-center justify-between px-10 py-5">
+        <div className="flex items-center gap-5">
+          {
+            sidemenu ? (
+              <PanelLeftClose onClick={() => setSidemenu(!sidemenu)} className="z-10 w-7 h-7 text-gray-600 hover:text-gray-800 transition-all duration-500 ease-in-out cursor-pointer" /> ) : (
+                <PanelLeftOpen onClick={() => setSidemenu(!sidemenu)} className="z-10 w-7 h-7 text-gray-600 hover:text-gray-800 transition-all duration-500 ease-in-out cursor-pointer" />
+              )
+
+          }
+          <MessageSquarePlus className="z-10 w-7 h-7 text-gray-600 cursor-pointer hover:text-gray-800 transition-all duration-500 ease-in-out " />
+          <h1 className={` text-3xl text-[#4A4A4A] font-Gentona z-10`}>Phantasia</h1>
+        </div>
+        <button className="px-5 mx-4 my-2 py-2 rounded-full bg-white shadow-md border font-Barlow border-gray-600 hover:bg-gray-100 transition-colors text-black">
+          Login
+        </button>
+      </header>
 
         {/* Main Content */}
         <main className="flex-1 flex flex-col">
