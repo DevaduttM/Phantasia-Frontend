@@ -347,10 +347,12 @@ export default function Home() {
             savedItems.map((session: any) => (
               <li
                 key={session.id}
-                className="session-item text-nowrap shadow-md bg-[#999898] rounded-lg m-3 py-3 hover:opacity-80 transition-all duration-500 ease-in-out cursor-pointer"
+                className="session-item text-nowrap  rounded-xl mx-5 my-2 py-3 hover:bg-[#5b5b5b] transition-all duration-500 ease-in-out cursor-pointer"
               >
                 <h1 className="font-Barlow text-lg ml-2">
-                  {session.Question.slice(0, 32) + "..."}
+                  {session.Question.length > 32
+                    ? session.Question.slice(0, 32) + "..."
+                    : session.Question}
                 </h1>
               </li>
             ))}
