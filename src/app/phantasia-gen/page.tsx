@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { db } from "../firebase"; // Assume you have already set up Firebase
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import { collection, getDocs, addDoc, query, where } from "firebase/firestore";
 import {
   Menu,
   FolderPlus,
@@ -71,40 +71,71 @@ export default function Home() {
   };
   const handleGenerate = async () => {
     setLoading(true);
-    if (story.trim()) {
+    if (story.trim() && user) {
       const docRef = await addDoc(collection(db, "Script"), {
         Question: story,
         Username: user.displayName,
+        userId: user.uid, // Add user ID to the document
       });
     }
   };
   console.log(savedItems);
   useEffect(() => {
     async function fetchSessions() {
-      const querySnapshot = await getDocs(collection(db, "Script"));
-      const sessionsData = querySnapshot.docs.map((doc) => doc.data());
-      setSavedItems(sessionsData);
+      if (user) {
+        // Create a query to filter sessions by user ID
+        const sessionsQuery = query(
+          collection(db, "Script"),
+          where("userId", "==", user.uid)
+        );
+
+        const querySnapshot = await getDocs(sessionsQuery);
+        const sessionsData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        // Sort sessions by creation date (newest first)
+
+        setSavedItems(sessionsData);
+      } else {
+        // Clear sessions when user logs out
+        setSavedItems([]);
+      }
     }
 
     fetchSessions();
-  }, []);
+  }, [user]); // Re-fetch when user changes
 
   const saveItem = async () => {
-    if (story.trim()) {
+    if (story.trim() && user) {
       try {
         await addDoc(collection(db, "Script"), {
           Question: story,
           Username: user.displayName,
+          userId: user.uid,
+          createdAt: new Date().toISOString(),
         });
         setStory("");
         setIsTall(false);
-        const querySnapshot = await getDocs(collection(db, "Script"));
-        const sessionsData = querySnapshot.docs.map((doc) => doc.data());
-        setSavedItems(sessionsData);
+
+        // Refresh sessions after saving
+        const sessionsQuery = query(
+          collection(db, "Script"),
+          where("userId", "==", user.uid)
+        );
+        const querySnapshot = await getDocs(sessionsQuery);
+        const sessionsData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        const sortedSessions = sessionsData.sort(
+          (a: any, b: any) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        setSavedItems(sortedSessions);
       } catch (error) {
         console.error("Error saving document: ", error);
-      } finally {
-        setStory("");
       }
     }
   };
@@ -316,16 +347,17 @@ export default function Home() {
         }`}
       >
         <ul className="mt-20">
-          {savedItems.map((session: any, index: any) => (
-            <li
-              key={index}
-              className="session-item text-nowrap shadow-md bg-[#999898] rounded-lg m-3 py-3 hover:opacity-80 transition-all duration-500 ease-in-out cursor-pointer"
-            >
-              <h1 className="font-Barlow text-lg ml-2">
-                {session.Question.slice(0, 32) + "..."}
-              </h1>
-            </li>
-          ))}
+          {user &&
+            savedItems.map((session: any) => (
+              <li
+                key={session.id}
+                className="session-item text-nowrap shadow-md bg-[#999898] rounded-lg m-3 py-3 hover:opacity-80 transition-all duration-500 ease-in-out cursor-pointer"
+              >
+                <h1 className="font-Barlow text-lg ml-2">
+                  {session.Question.slice(0, 32) + "..."}
+                </h1>
+              </li>
+            ))}
         </ul>
       </div>
     </>
