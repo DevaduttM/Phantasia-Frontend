@@ -14,6 +14,7 @@ export default {
       },
       fontFamily: {
         "Gentona" : ["Gentona", "sans-serif"],
+        "Barlow" : ["Barlow","sans-serif"]
       }
     },
   },

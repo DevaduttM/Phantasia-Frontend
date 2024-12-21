@@ -27,3 +27,9 @@ body {
   font-style: normal;
 }
 
+@font-face{
+  font-family: "Barlow";
+  src: url("/fonts/Barlow-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
