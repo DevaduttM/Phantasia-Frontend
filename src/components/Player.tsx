@@ -112,7 +112,7 @@ export default function MusicPlayerSlider() {
     <Box sx={{ width: "100%", overflow: "hidden", position: "relative", p: 3 }}>
       <audio
         ref={audioRef}
-        src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+        src="/finalaudio.mp3"
       />
       <Widget sx={window.innerWidth < 600 ? { width: "100%" } : { width: 500 }}>
         

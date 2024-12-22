@@ -21,6 +21,7 @@ import {
 import { ChevronUpDownIcon } from "@heroicons/react/16/solid";
 import { CheckIcon } from "@heroicons/react/20/solid";
 import Player from "@/components/Player";
+import axios from "axios";
 export default function Home() {
   const { user, googleSignIn, logOut } = UserAuth();
   const handleSignIn = async () => {
@@ -59,6 +60,8 @@ export default function Home() {
   const [showProfile, setShowProfile] = useState(false);
   const [isTall, setIsTall] = useState(false);
   const [savedItems, setSavedItems] = useState<any>([]);
+  const [selectedSession, setSelectedSession] = useState<any>(null);
+  const [data, setData] = useState(false);
   const handleChange = (e: any) => {
     const textarea = e.target;
     setStory(e.target.value);
@@ -71,66 +74,80 @@ export default function Home() {
     textarea.scrollHeight > 56 ? setIsTall(true) : setIsTall(false);
     console.log(textarea.scrollHeight);
   };
-  const handleGenerate = async () => {
-    setLoading(true);
+
+  const handleSessionClick = (session: any) => {
+    setSelectedSession(session);
+    setStory(session.Question);
+    // Adjust textarea height for the loaded content
+    const textarea = document.querySelector("textarea");
+    if (textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = `${textarea.scrollHeight}px`;
+      textarea.scrollHeight > 56 ? setIsTall(true) : setIsTall(false);
+    }
+    // Close sidemenu on mobile after selection
+    if (window.innerWidth < 768) {
+      setSidemenu(false);
+    }
   };
+
   console.log(savedItems);
   useEffect(() => {
     async function fetchSessions() {
       if (user) {
-        // Create a query to filter sessions by user ID
         const sessionsQuery = query(
           collection(db, "Script"),
           where("userId", "==", user.uid)
         );
-
         const querySnapshot = await getDocs(sessionsQuery);
         const sessionsData = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
-
-        // Sort sessions by creation date (newest first)
-
         setSavedItems(sessionsData);
       } else {
-        // Clear sessions when user logs out
         setSavedItems([]);
+        setSelectedSession(null);
+        setStory("");
       }
     }
-
     fetchSessions();
   }, [user]); // Re-fetch when user changes
 
   const saveItem = async () => {
     if (story.trim() && user) {
       try {
-        await addDoc(collection(db, "Script"), {
+        const newSession = {
           Question: story,
           Username: user.displayName,
           userId: user.uid,
           createdAt: new Date().toISOString(),
-        });
+        };
+
+        const docRef = await addDoc(collection(db, "Script"), newSession);
         setStory("");
         setIsTall(false);
 
-        // Refresh sessions after saving
-        const sessionsQuery = query(
-          collection(db, "Script"),
-          where("userId", "==", user.uid)
-        );
-        const querySnapshot = await getDocs(sessionsQuery);
-        const sessionsData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        const sortedSessions = sessionsData.sort(
-          (a: any, b: any) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        setSavedItems(sortedSessions);
+        // Add the new session to the list with its ID
+        const sessionWithId = { ...newSession, id: docRef.id };
+        setSavedItems([sessionWithId, ...savedItems]);
       } catch (error) {
         console.error("Error saving document: ", error);
+      }
+    }
+  };
+
+  const handleGenerate = async () => {
+    if (story.trim()) {
+      setLoading(true);
+      try {
+        const response = await axios.post("http://127.0.0.1:5000/getscript", {
+          user_input: story,
+        });
+      } catch (error) {
+        console.error("Error generating story: ", error);
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -194,7 +211,7 @@ export default function Home() {
           {/* Loading Circles */}
           <div className="flex-1 flex items-center justify-center">
             <div className="flex items-center gap-8">
-              {/* {loading ? (
+              {loading ? (
                 <>
                   <div className="w-[140px] h-[140px] rounded-full border border-gray-600 bg-white shadow-lg animate-circle"></div>
                   <div className="w-[100px] h-[100px] rounded-full border border-gray-600 bg-white shadow-lg animate-circle animation-delay-1"></div>
@@ -206,8 +223,8 @@ export default function Home() {
                   <div className="w-[100px] h-[100px] rounded-full border border-black bg-white shadow-lg "></div>
                   <div className="w-[40px] h-[40px] rounded-full border border-black bg-white shadow-lg "></div>
                 </>
-              )} */}
-              <Player />
+              )}
+              {data && <Player />}
               <div className="absolute top-[20%] left-[86%] ">
                 <Listbox value={selected1} onChange={setSelected1}>
                   <Label className="block text-sm/6 font-medium font-Barlow text-gray-900">
