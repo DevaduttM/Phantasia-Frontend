@@ -45,13 +45,16 @@ const TinyText = styled(Typography)({
   color: "rgba(0,0,0,1)",
 });
 
-export default function MusicPlayerSlider() {
+export default function MusicPlayerSlider({
+  audio_url,
+}: {
+  audio_url: string;
+}) {
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
   const duration = audioRef.current?.duration || 0;
   const [position, setPosition] = React.useState(0);
   const [paused, setPaused] = React.useState(true);
   const [wave, setWave] = React.useState(false);
-
 
   function formatDuration(value: number) {
     const roundedValue = Math.floor(value);
@@ -77,13 +80,13 @@ export default function MusicPlayerSlider() {
     if (!audio) return;
 
     audio.playbackRate = Math.min(2, audio.playbackRate + 0.5);
-  }
+  };
   const slowPlayback = () => {
     const audio = audioRef.current;
     if (!audio) return;
 
     audio.playbackRate = Math.max(0.5, audio.playbackRate - 0.5);
-  }
+  };
 
   const togglePlayPause = () => {
     const audio = audioRef.current;
@@ -110,13 +113,17 @@ export default function MusicPlayerSlider() {
 
   return (
     <Box sx={{ width: "100%", overflow: "hidden", position: "relative", p: 3 }}>
-      <audio
-        ref={audioRef}
-        src="/finalaudio.mp3"
-      />
+      <audio ref={audioRef} src={audio_url} />
       <Widget sx={window.innerWidth < 600 ? { width: "100%" } : { width: 500 }}>
-        
-        <Box  sx={{ display: "flex", alignItems: "center", backgroundColor: "rgba(0,0,0,0.08)", borderRadius: 8, p: 1.5 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: "rgba(0,0,0,0.08)",
+            borderRadius: 8,
+            p: 1.5,
+          }}
+        >
           <CoverImage>
             <img
               alt="can't win - Chilling Sunday"
@@ -125,7 +132,10 @@ export default function MusicPlayerSlider() {
             />
           </CoverImage>
           <Box sx={{ ml: 1.5, minWidth: 0 }}>
-            <Typography variant="caption" sx={{ color: "#000", fontWeight: 500 }}>
+            <Typography
+              variant="caption"
+              sx={{ color: "#000", fontWeight: 500 }}
+            >
               Walter White
             </Typography>
             <Typography noWrap>
@@ -136,24 +146,22 @@ export default function MusicPlayerSlider() {
             </Typography>
           </Box>
           <Box>
-          {
-          wave && (
-            <motion.div className=""
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            >
-
-              <Image
-                src={"/Waveform.gif"}
-                width={120}
-                className="ml-[60%] "
-                height={120}
-                alt="waveform"
-              />
-            </motion.div>
-          )
-        }
+            {wave && (
+              <motion.div
+                className=""
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Image
+                  src={"/Waveform.gif"}
+                  width={120}
+                  className="ml-[60%] "
+                  height={120}
+                  alt="waveform"
+                />
+              </motion.div>
+            )}
           </Box>
         </Box>
         <Slider
@@ -205,7 +213,10 @@ export default function MusicPlayerSlider() {
           <IconButton onClick={slowPlayback} aria-label="previous song">
             <FastRewindRounded fontSize="large" />
           </IconButton>
-          <IconButton aria-label={paused ? "play" : "pause"} onClick={togglePlayPause}>
+          <IconButton
+            aria-label={paused ? "play" : "pause"}
+            onClick={togglePlayPause}
+          >
             {paused ? (
               <PlayArrowRounded sx={{ fontSize: "3rem" }} />
             ) : (

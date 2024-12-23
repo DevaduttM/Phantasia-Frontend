@@ -62,7 +62,7 @@ export default function Home() {
   const [isTall, setIsTall] = useState(false);
   const [savedItems, setSavedItems] = useState<any>([]);
   const [selectedSession, setSelectedSession] = useState<any>(null);
-  const [data, setData] = useState(false);
+  const [data, setData] = useState("");
   const handleChange = (e: any) => {
     const textarea = e.target;
     setStory(e.target.value);
@@ -145,8 +145,8 @@ export default function Home() {
         const response = await axios.post("http://127.0.0.1:5000/getscript", {
           user_input: story,
         });
-        if(response){
-          setData(true);
+        if(response.data.audio_url){
+          setData(response.data.audio_url);
         }
       } catch (error) {
         console.error("Error generating story: ", error);
@@ -234,7 +234,7 @@ export default function Home() {
                   <div className="w-[40px] h-[40px] rounded-full border border-black bg-white shadow-lg "></div>
                 </>
               )}
-              {data && <Player />}
+              {data && <Player audio_url={data}/>}
               <div className="absolute top-[20%] left-[86%] ">
                 <Listbox value={selected1} onChange={setSelected1}>
                   <Label className="block text-sm/6 font-medium font-Barlow text-gray-900">
